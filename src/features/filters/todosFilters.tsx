@@ -1,13 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { filtersStatus } from "./types";
 
-const initialState = {};
+export const filterTodoBy: filtersStatus = {
+  all: "all",
+  active: "active",
+  completed: "completed",
+};
 
 const filtersSlice = createSlice({
   name: "todos",
-  initialState,
-  reducers: {},
+  initialState: {
+    status: filterTodoBy.all,
+  },
+  reducers: {
+    statusFilterChanged: (state, { payload }) => {
+      state.status = payload;
+    },
+  },
 });
 
-export const {} = filtersSlice.actions;
+export const { statusFilterChanged } = filtersSlice.actions;
 
 export default filtersSlice.reducer;
