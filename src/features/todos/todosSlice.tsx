@@ -13,12 +13,22 @@ const todosSlice = createSlice({
     addTodo: (state, action) => {
       state.entities.push(action.payload);
     },
-    markAsCompleted: ({ entities }, { payload }) => {
+    markAsCompleted: ({ entities = [] }, { payload }) => {
       const todo = entities.find(todo => todo.id === payload);
 
       if (todo) {
         todo.completed = !todo.completed;
       }
+    },
+    markAllAsCompleted: state => {
+      state.entities.forEach(todo => {
+        todo.completed = true;
+      });
+    },
+    unmarkAllAsCompleted: state => {
+      state.entities.forEach(todo => {
+        todo.completed = false;
+      });
     },
     deleteTodo: (state, { payload }) => {
       state.entities = state.entities.filter(todo => todo.id !== payload);
@@ -29,6 +39,14 @@ const todosSlice = createSlice({
   },
 });
 
-export const { addTodo, markAsCompleted, deleteTodo, deleteAllTodos } = todosSlice.actions;
+export const {
+  addTodo,
+  markAsCompleted,
+  deleteTodo,
+  deleteAllTodos,
+  markAllAsCompleted,
+  clearCompleted,
+  unmarkAllAsCompleted,
+} = todosSlice.actions;
 
 export default todosSlice.reducer;
