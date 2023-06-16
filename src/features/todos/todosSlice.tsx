@@ -45,7 +45,6 @@ export const {
   deleteTodo,
   deleteAllTodos,
   markAllAsCompleted,
-  clearCompleted,
   unmarkAllAsCompleted,
 } = todosSlice.actions;
 
