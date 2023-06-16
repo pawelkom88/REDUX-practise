@@ -1,50 +1,50 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "../hook";
+import { useAppDispatch, useAppSelector } from "../hook";
 import { nanoid } from "nanoid";
 import { addTodo } from "../features/todos/todosSlice";
 import Todo from "./Todo";
+import Filters from "./Filters";
 
 export default function Todos() {
-  const [todo, setTodo] = useState("");
+  const [todo, setTodo] = useState<string>("");
   const dispatch = useAppDispatch();
+  const numberOfTodos = useAppSelector(state => state.todos.entities.length);
 
   function handleAddTodo(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
+
+    if (!todo.length) return;
+
     dispatch(addTodo({ id: nanoid(), name: todo, completed: false }));
     setTodo("");
   }
 
+  const suffix: string = numberOfTodos === 1 ? "Todo" : "Todos";
+  const todosCount: number | string =
+    numberOfTodos > 0 ? `${numberOfTodos} ${suffix}` : "No todos 😣";
+
   return (
-    <form onSubmit={handleAddTodo} className="w-1/2 mx-auto">
-      <input
-        onChange={e => setTodo(e.target.value)}
-        value={todo}
-        type="text"
-        className=" p-4 border-2 border-gray-700"
-        placeholder="Add Todo"
-      />
-      <button
-        className="m-4 border-2 border-gray-700 p-4 bg-green-400 hover:bg-green-800 hover:text-white"
-        type="submit">
-        Add todo
-      </button>
-      <div className="my-12">
-        <h2 className="text-lg font-bold text-gray-700">Filters</h2>
-        {/* // component different colors */}
-        <div className="flex items-center justify-start gap-4">
-          <label htmlFor="completed">Completed</label>
-          <input
-            id="completed"
-            className="w-8 h-8 m-2"
-            type="checkbox"
-            checked={false}
-            onChange={() => console.log("")}
-          />
-        </div>
-      </div>
-      <ol className="border-2 p-4 border-gray-700">
+    <div className="w-full p-4">
+      <form onSubmit={handleAddTodo} className="lg:w-1/2 mx-auto">
+        <input
+          onChange={e => setTodo(e.target.value)}
+          value={todo}
+          type="text"
+          className=" p-4 border-2 border-gray-700"
+          placeholder="Add Todo"
+        />
+        <button
+          className="m-4 border-2 border-gray-700 p-4 bg-green-400 hover:bg-green-800 hover:text-white"
+          type="submit">
+          Add todo
+        </button>
+        <Filters />
+      </form>
+
+      <ol className="lg:w-1/2 border-2 p-4 border-gray-700 mx-auto">
+        <h3 className="text-2xl mb-2">{todosCount}</h3>
         <Todo />
       </ol>
-    </form>
+    </div>
   );
 }
